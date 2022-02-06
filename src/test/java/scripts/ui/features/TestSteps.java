@@ -13,8 +13,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.junit.Assert;
-import pageobjects.shopify.plugin.FindPage;
-import pageobjects.shopify.plugin.HomePage;
+import pageobjects.shopify.plugin.LoginPage;
+import pageobjects.shopify.plugin.OrdersPage;
 import scripts.ui.BaseTest;
 import java.util.concurrent.TimeUnit;
 import static utils.HandleElements.WaitAndSendKey;
@@ -25,10 +25,10 @@ public class TestSteps extends BaseTest {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver_mac");
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        homePage = PageFactory.initElements(driver, HomePage.class);
-        findPage = PageFactory.initElements(driver, FindPage.class);
         driver.get(ShopifyData.URL);
         driver.manage().window().maximize();
+        loginPage = PageFactory.initElements(driver, LoginPage.class);
+        ordersPage = PageFactory.initElements(driver, OrdersPage.class);
     }
 
     @After
@@ -36,59 +36,59 @@ public class TestSteps extends BaseTest {
         driver.quit();
     }
 
-    private String city;
-    public String getCity() {
-        return city;
+    private String emailOrPhone;
+    public String getEmailOrPhone() {
+        return emailOrPhone;
     }
 
-    public void setCity(String newCity) {
-        this.city = newCity;
+    public void setEmailOrPhone(String newEmailOrPhone) {
+        this.emailOrPhone = newEmailOrPhone;
     }
 
-    @Given("^user is on homepage$")
-    public void user_is_on_homepage(){
-        Assert.assertEquals("Page Title is matching", ShopifyData.HOME_PAGE_TITLE, driver.getTitle());
+    private String password;
+    public String getPassword() {
+        return emailOrPhone;
     }
 
-    @When("^user enters (.*) city in the navigation search box$")
-    public void user_enters_valid_city_in_the_navigation_search_box(String city){
-        WaitAndSendKey(driver, homePage.navSearchForm, city);
-        setCity(city);
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
     }
 
-    @And("^user selects enter on keyboard to search$")
-    public void user_selects_enter_on_keyboard_to_search(){
+    @Given("^user is on Login page")
+    public void user_is_on_loginpage(){
+
+        Assert.assertEquals("Login page Title is matching", ShopifyData.LOGIN_PAGE_TITLE, driver.getTitle());
+        Assert.assertEquals("Welcome text is matching", ShopifyData.LOGIN_PAGE_WELCOME_TEXT, loginPage.welcomeText.getText().substring(0,10) + loginPage.welcomeText.getText().substring(11,32));
+        Assert.assertEquals("Label Email or Phone is matching", "Email or Phone", loginPage.labelEmailOrPhone.getText());
+        Assert.assertEquals("Label Password is matching", "Password", loginPage.labelPassword.getText());
+        Assert.assertEquals("Label button Login is matching", "Login", loginPage.btnLogin.getText());
+    }
+
+    @When("^user enters valid \"Email or Phone\" such as \"(.*)\"$")
+    public void user_enters_valid_emailorphone(String emailOrPhone){
+        WaitAndSendKey(driver, loginPage.textboxEmailOrPhone, emailOrPhone);
+        setEmailOrPhone(emailOrPhone);
+    }
+
+    @And("^user enters valid \"Password\" such as \"(.*)\"$")
+    public void user_enters_valid_password(String password){
+        WaitAndSendKey(driver, loginPage.textboxPassword, password);
+        setEmailOrPhone(password);
+    }
+
+    @And("^user selects Login button$")
+    public void user_selects_login_button(){
         Actions actions = new Actions(driver);
-        actions.moveToElement(homePage.navSearchForm).sendKeys(Keys.ENTER).build().perform();
+        actions.moveToElement(loginPage.btnLogin).click();
     }
 
-    @Then("^find page is displayed with correct page title$")
-    public void find_page_is_displayed_with_correct_page_title(){
-        Assert.assertEquals("Page Title is matching", ShopifyData.FIND_PAGE_TITLE, driver.getTitle());
+    @Then("^user logs in successfully$")
+    public void user_logs_in_successfully(){
+        Assert.assertEquals("Page Title is matching", ShopifyData.ORDERS_PAGE_TITLE, driver.getTitle());
     }
 
-    @And("^find page header as Weather in your city is displayed$")
-    public void find_page_header_is_displayed() {
-        Assert.assertEquals("Headline is matching", ShopifyData.HEADLINE_WEATHER_IN_YOUR_CITY, findPage.headlineInFindPage.getText());
-    }
-
-    @And("^search form is displayed with the previous city entered$")
-    public void search_form_is_displayed_with_previous_city_entered(){
-        Assert.assertEquals("City is matching", getCity(), findPage.searchBoxInForm.getAttribute("value"));
-        Assert.assertEquals("Search button is matching", ShopifyData.SEARCH_BUTTON_TEXT, findPage.searchButtonInForm.getText());
-    }
-
-    @And("^forecast list is displayed$")
-    public void forecast_list_is_displayed(){
-        Assert.assertNotNull(findPage.forecastList);
-    }
-
-    @And("^forecast list is NOT displayed$")
-    public void forecast_list_is_not_displayed(){
-        if(driver.findElements(By.xpath("//*[@id='forecast_list_ul']//a")).isEmpty()){
-            Assert.assertTrue(true);
-        }else{
-            Assert.fail();
-        }
+    @And("^user navigates to Orders page$")
+    public void user_navigates_to_orders_page() {
+        Assert.assertEquals("Page Title is matching", ShopifyData.ORDERS_PAGE_TITLE, driver.getTitle());
     }
 }

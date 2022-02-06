@@ -1,12 +1,12 @@
 package scripts.ui;
 
 import org.openqa.selenium.WebDriver;
-import pageobjects.shopify.plugin.FindPage;
-import pageobjects.shopify.plugin.HomePage;
+import pageobjects.shopify.plugin.LoginPage;
+import pageobjects.shopify.plugin.OrdersPage;
 
 public class BaseTest {
 
     protected static WebDriver driver;
-    protected static HomePage homePage;
-    protected static FindPage findPage;
+    protected static LoginPage loginPage;
+    protected static OrdersPage ordersPage;
 }

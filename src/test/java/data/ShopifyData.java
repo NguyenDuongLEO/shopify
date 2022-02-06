@@ -1,9 +1,10 @@
 package data;
 
 public class ShopifyData {
-    public static final String URL = "https://openweathermap.org/";
-    public static final String HOME_PAGE_TITLE = "Сurrent weather and forecast - OpenWeatherMap";
-    public static final String FIND_PAGE_TITLE = "Find - OpenWeatherMap";
+    public static final String URL = "https://shopify-plugin.stg.deliveree.com/login";
+    public static final String LOGIN_PAGE_TITLE = "Deliveree";
+    public static final String LOGIN_PAGE_WELCOME_TEXT = "Welcome to" + "Shopify Deliveree App";
+    public static final String ORDERS_PAGE_TITLE = "Deliveree";
     public static final String HEADLINE_WEATHER_IN_YOUR_CITY = "Weather in your city";
     public static final String SEARCH_BUTTON_TEXT = "Search";
     public static final String API_RESPONSE_BODY_NAME = "Thanh pho Ho Chi Minh";
